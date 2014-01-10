@@ -1,22 +1,21 @@
 package edit;
 
 import asciiPanel.AsciiPanel;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
-public class Main extends JFrame implements KeyListener {
+public class ApplicationMain extends JFrame implements KeyListener {
     
     private AsciiPanel terminal;
     private Screen screen;
     
-    public Main() {
+    public ApplicationMain() {
         super();
         terminal = new AsciiPanel(80,24);
         add(terminal);
         pack();
-        screen = new StartScreen();
+        screen = new MainScreen();
         addKeyListener(this);
         repaint();
     }
@@ -42,10 +41,9 @@ public class Main extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) { }
     
     public static void main(String[] args) {
-        Main app = new Main();
+        ApplicationMain app = new ApplicationMain();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setVisible(true);
-        app.setBackground(Color.black);
         app.setTitle("Edit");
     }
 }
