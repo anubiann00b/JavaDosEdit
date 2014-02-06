@@ -15,8 +15,6 @@ public class MainScreen implements Screen {
     
     private ArrayList<MenuOption> menuOptions = new ArrayList<MenuOption>();
     private File currentFile;
-    private int cursorX = 1;
-    private int cursorY = 1;
     
     public MainScreen() {
         menuOptions.add(new MenuOption("File"));
@@ -34,7 +32,7 @@ public class MainScreen implements Screen {
         displayBorder(terminal);
         displayScrollBars(terminal);
         displayStatusBar(terminal);
-        terminal.write('_',cursorX,cursorY+1,GREY,BLUE);
+        terminal.write('_',terminal.getCursorX(),terminal.getCursorY(),GREY,BLUE);
         terminal.writeCenter("A DOS Edit clone made in Java.",5,GREY,BLUE);
     }
     
@@ -101,28 +99,30 @@ public class MainScreen implements Screen {
         terminal.write((char)179,62,23,BLACK, TURQUOISE);
         
         // Cursor position.
-        terminal.write(String.format("%05d", cursorX) + ":" + String.format("%03d", cursorY),70,23,BLACK,TURQUOISE);
+        terminal.write(String.format("%05d", terminal.getCursorX()) + ":" + String.format("%03d", terminal.getCursorY()),70,23,BLACK,TURQUOISE);
     }
     
     @Override
-    public Screen respondToUserInput(KeyEvent key) {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         int k = key.getKeyCode();
         int dx = 0;
         int dy = 0;
         
         if (k==KeyEvent.VK_RIGHT)
             dx++;
-        if (k==KeyEvent.VK_LEFT)
+        else if (k==KeyEvent.VK_LEFT)
             dx--;
-        if (k==KeyEvent.VK_UP)
+        else if (k==KeyEvent.VK_UP)
             dy--;
-        if (k==KeyEvent.VK_DOWN)
+        else if (k==KeyEvent.VK_DOWN)
             dy++;
-        
-        if (cursorX + dx < 79 && cursorX + dx > 0)
-            cursorX += dx;
-        if (cursorY + dy < 21 && cursorY + dy > 0)
-            cursorY += dy;
+        else {
+        }
+
+        if (terminal.getCursorX() + dx < 79 && terminal.getCursorX() + dx > 0)
+            terminal.setCursorX(terminal.getCursorX()+dx);
+        if (terminal.getCursorY() + dy < 21 && terminal.getCursorY() + dy > 0)
+            terminal.setCursorX(terminal.getCursorY()+dy);
         
         return this;
     }
