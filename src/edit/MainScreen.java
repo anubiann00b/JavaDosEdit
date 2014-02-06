@@ -34,6 +34,7 @@ public class MainScreen implements Screen {
         displayBorder(terminal);
         displayScrollBars(terminal);
         displayStatusBar(terminal);
+        terminal.write('_',cursorX,cursorY+1,GREY,BLUE);
         terminal.writeCenter("A DOS Edit clone made in Java.",5,GREY,BLUE);
     }
     
@@ -105,6 +106,24 @@ public class MainScreen implements Screen {
     
     @Override
     public Screen respondToUserInput(KeyEvent key) {
+        int k = key.getKeyCode();
+        int dx = 0;
+        int dy = 0;
+        
+        if (k==KeyEvent.VK_RIGHT)
+            dx++;
+        if (k==KeyEvent.VK_LEFT)
+            dx--;
+        if (k==KeyEvent.VK_UP)
+            dy--;
+        if (k==KeyEvent.VK_DOWN)
+            dy++;
+        
+        if (cursorX + dx < 79 && cursorX + dx > 0)
+            cursorX += dx;
+        if (cursorY + dy < 21 && cursorY + dy > 0)
+            cursorY += dy;
+        
         return this;
     }
 }
@@ -115,4 +134,5 @@ public class MainScreen implements Screen {
  * 26: Right arrow
  * 27: Left arrow
  * http://everything2.com/title/CP437
+ * http://en.wikipedia.org/wiki/Code_page_437
  */
