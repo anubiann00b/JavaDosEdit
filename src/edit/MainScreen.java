@@ -16,6 +16,9 @@ public class MainScreen implements Screen {
     private ArrayList<MenuOption> menuOptions = new ArrayList<MenuOption>();
     private File currentFile;
     
+    private int cursorX = 1;
+    private int cursorY = 1;
+    
     public MainScreen() {
         menuOptions.add(new MenuOption("File"));
         menuOptions.add(new MenuOption("Edit"));
@@ -28,16 +31,17 @@ public class MainScreen implements Screen {
     @Override
     public void displayOutput(AsciiPanel terminal) {
         terminal.clear(' ',GREY,BLUE);
+        terminal.setCursorX(0);
+        terminal.setCursorY(0);
         displayMenuBar(terminal);
         displayBorder(terminal);
         displayScrollBars(terminal);
         displayStatusBar(terminal);
-        terminal.write('_',terminal.getCursorX(),terminal.getCursorY(),GREY,BLUE);
+        terminal.write('_',cursorX,cursorY+1,GREY,BLUE);
         terminal.writeCenter("A DOS Edit clone made in Java.",5,GREY,BLUE);
     }
     
     private void displayMenuBar(AsciiPanel terminal) {
-        terminal.setCursorPosition(0,0);
         for (MenuOption o : menuOptions) {
             for (int i=0;i<o.spaces();i++)
                 terminal.write(' ',BLACK,GREY);
@@ -99,7 +103,7 @@ public class MainScreen implements Screen {
         terminal.write((char)179,62,23,BLACK, TURQUOISE);
         
         // Cursor position.
-        terminal.write(String.format("%05d", terminal.getCursorX()) + ":" + String.format("%03d", terminal.getCursorY()),70,23,BLACK,TURQUOISE);
+        terminal.write(String.format("%05d",cursorX) + ":" + String.format("%03d",cursorY),70,23,BLACK,TURQUOISE);
     }
     
     @Override
@@ -117,14 +121,20 @@ public class MainScreen implements Screen {
         else if (k==KeyEvent.VK_DOWN)
             dy++;
         else {
+            write(terminal,k);
         }
-
-        if (terminal.getCursorX() + dx < 79 && terminal.getCursorX() + dx > 0)
-            terminal.setCursorX(terminal.getCursorX()+dx);
-        if (terminal.getCursorY() + dy < 21 && terminal.getCursorY() + dy > 0)
-            terminal.setCursorX(terminal.getCursorY()+dy);
+        
+        if (cursorX + dx < 79 && cursorX + dx > 0)
+            cursorX = cursorX+dx;
+        if (cursorY + dy < 21 && cursorY + dy > 0)
+            cursorY = cursorY+dy;
         
         return this;
+    }
+
+    private void write(AsciiPanel terminal, int k) {
+        terminal.write((char)k,cursorX,cursorY);
+        cursorX++;
     }
 }
 
