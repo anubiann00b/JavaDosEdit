@@ -37,8 +37,12 @@ public class MainScreen implements Screen {
         displayBorder(terminal);
         displayScrollBars(terminal);
         displayStatusBar(terminal);
-        terminal.write('_',cursorX,cursorY+1,GREY,BLUE);
         terminal.writeCenter("A DOS Edit clone made in Java.",5,GREY,BLUE);
+        for (int i=0;i<79;i++)
+            for (int j=0;j<22;j++)
+                if (currentFile.getChar(i,j)!=0)
+                    terminal.write(currentFile.getChar(i,j),i,j+1);
+        terminal.write('_',cursorX,cursorY+1,GREY,BLUE);
     }
     
     private void displayMenuBar(AsciiPanel terminal) {
@@ -120,8 +124,8 @@ public class MainScreen implements Screen {
             dy--;
         else if (k==KeyEvent.VK_DOWN)
             dy++;
-        else {
-            write(terminal,k);
+        else if (cursorX + dx < 79 && cursorX + dx > 0) {
+            write((char)k);
         }
         
         if (cursorX + dx < 79 && cursorX + dx > 0)
@@ -132,9 +136,10 @@ public class MainScreen implements Screen {
         return this;
     }
 
-    private void write(AsciiPanel terminal, int k) {
-        terminal.write((char)k,cursorX,cursorY);
-        cursorX++;
+    private void write(char k) {
+        currentFile.writeChar((char)k,cursorX,cursorY);
+        if (cursorX < 78)
+            cursorX++;
     }
 }
 
